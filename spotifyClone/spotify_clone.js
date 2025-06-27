@@ -1,34 +1,41 @@
-class Template {
-    constructor(image, description, ...tags) {
-        this.image = image;
-        this.description = description;
-        this.tags = tags;
-    }
+// class Template { //Class to create a card template for the Spotify clone 
+//     constructor(classname, image, description) {
+//         this.classname = classname;
+//         this.image = image;
+//         this.description = description;
+//     }
 
-    create() {
-        return `<div class="template" style="width: 170px; height: 220px; padding: 5px; overflow: hidden; text-overflow: ellipsis; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                    <img src="${this.image}" alt="Template Image" style="width: 170px; height: 170px; border-radius: 10px;">
-                    <p style="margin: 10px; height: 50px; overflow: hidden; text-overflow: ellipsis; font-size: 18px;">${this.description}</p>
-                </div>`;
-    }
+//     create() {
+// return `<div class="template" style=" display: inline-flexbox; width: 170px; height: 220px; padding: 5px; overflow: hidden; text-overflow: ellipsis; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+//             <img src="${this.image}" alt="Template Image" style="width: 170px; height: 170px; border-radius: 10px;">
+//             <p style="margin: 10px; height: 50px; overflow: hidden; text-overflow: ellipsis; font-size: 18px;">${this.description}</p>
+//         </div>`;
+//     }
+// }
+// function cardTemplate(classname, image, description) {
+//     songs[i] = new Template(classname, image, description);
+//     document.querySelector(classname).innerHTML += songs[i].create();
+// }
+
+
+// var songs = [song1, song2];
+// cardTemplate(".card", "https://my.alfred.edu/zoom/_images/foster-lake.jpg", "this is the description and onword there is lorem10 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus, blanditiis!");
+
+// console.log(songs.songName.name());
+
+var songs = [
+    { className: ".card", image: "https://my.alfred.edu/zoom/_images/foster-lake.jpg", description: "this is the description and onword there is lorem10 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus, blanditiis!" },
+    { className: ".card", image: "https://th.bing.com/th/id/OIP.6L7shpwxVAIr279rA0B1JQHaE7?o=7rm=3&rs=1&pid=ImgDetMain&cb=idpwebp2&o=7&rm=3", description: "this is the description and onword there is lorem10 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus, blanditiis!" }
+]
+function insertBlock(songs) {
+    songs.forEach(song => {
+        document.querySelector(song.className).innerHTML +=
+            `<div class="template" style=" width: 170px; height: 220px; padding: 10px; border-radius: 10px;">
+                <img src="${song.image}" alt="Template Image" style="width: 170px; height: 170px; border-radius: 10px;">
+                <p class="template" style="margin: 10px; height: 40px; width: 160px; overflow-y: hidden; overflow-x: clip; text-overflow: ellipsis; font-size: 18px;">
+                    ${song.description.charAt(0).toUpperCase() + song.description.slice(1)}
+                </p>
+            </div>`;
+    });
 }
-
-function cardTemplate(image, description, ...tags) {
-    const flatTags = tags.flat(); // Flatten nested arrays if needed
-
-    const templateInstance = new Template(image, description, ...flatTags);
-
-    const cardElements = document.getElementsByClassName("card");
-
-    // Add the template to all matching elements
-    for (let el of cardElements) {
-        el.innerHTML = templateInstance.create();
-    }
-}
-
-// Usage
-let imagea = "https://www.bing.com/th/id/OIP.ShDMVFbdsBcORh_GCwAqmAHaEc?w=240&h=211&c=8&rs=1&qlt=90&o=6&cb=ircwebpc1&pid=3.1&rm=2";
-let descriptiona = "This is a sample description for the Spotify clone card. It can be longer than the container to test overflow handling.";
-let tagsa = ["tag1", "tag2", "tag3"];
-
-cardTemplate(imagea, descriptiona, tagsa);
+insertBlock(songs);
