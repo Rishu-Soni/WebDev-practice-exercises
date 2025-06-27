@@ -1,0 +1,14 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+ .template:hover {
+
+    background-color: #282828;
+    color: #1ed760;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+}
