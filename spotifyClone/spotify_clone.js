@@ -23,16 +23,16 @@
 
 // console.log(songs.songName.name());
 
-var songs = [
+var songs = [       // database of songs to be displayed in the Spotify clone
     { className: ".card", image: "https://my.alfred.edu/zoom/_images/foster-lake.jpg", description: "this is the description and onword there is lorem10 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus, blanditiis!" },
     { className: ".card", image: "https://th.bing.com/th/id/OIP.6L7shpwxVAIr279rA0B1JQHaE7?o=7rm=3&rs=1&pid=ImgDetMain&cb=idpwebp2&o=7&rm=3", description: "this is the description and onword there is lorem10 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus, blanditiis!" }
 ]
-function insertBlock(songs) {
+function insertBlock(songs){
     songs.forEach(song => {
         document.querySelector(song.className).innerHTML +=
             `<div class="template" style=" width: 170px; height: 220px; padding: 10px; border-radius: 10px;">
                 <img src="${song.image}" alt="Template Image" style="width: 170px; height: 170px; border-radius: 10px;">
-                <p class="template" style="margin: 10px; height: 40px; width: 160px; overflow-y: hidden; overflow-x: clip; text-overflow: ellipsis; font-size: 18px;">
+                <p class="template" style="margin: 10px; height: 40px; width: 160px; overflow-y: hidden; overflow-x: clip; text-overflow: ellipsis; font-size: 17px;">
                     ${song.description.charAt(0).toUpperCase() + song.description.slice(1)}
                 </p>
             </div>`;
