@@ -37,6 +37,7 @@ body {
     list-style: none;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .search_logo {
@@ -53,4 +54,12 @@ body {
     height: 34px;
     border-radius: 20px;
     background-color: #292929;
+}
+
+.search_tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+
 }
