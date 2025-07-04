@@ -38,4 +38,16 @@ function insertBlock(songs){
             </div>`;
     });
 }
+
+function searchfocusfunc() {
+    document.querySelector(".searchbar").style.backgroundcolor = "rgb(255, 255, 255)";
+    // document.querySelector(".searchbar").style.backgroundcolor = " #3a3a3a";
+    document.querySelector(".close").style.visibility = "visible";
+    document.querySelector(".browse").style.display = "none";
+}
+
+function closeapearfunc (){
+    document.querySelector(".close").style.visibility = "visible";
+}
+
 insertBlock(songs);
