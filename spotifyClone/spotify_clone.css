@@ -9,18 +9,13 @@ body {
     color: #fff;
 }
 
-.template:hover {
-
-    background-color: #292929;
-    color: #1ed760;
-}
-
 .card {
     display: flex;
     align-items: center;
 }
 
 .nav_logo {
+    display: grid;
     height: 34px;
     border-radius: 50%;
     filter: invert(100%)
@@ -31,35 +26,79 @@ body {
     align-items: center;
     padding: 7px 7px 7px 28px;
     background-color: #000000;
+    width: 100%;
 }
 
-.navbar>li {
-    list-style: none;
+.midGroup {
     display: flex;
     align-items: center;
-    width: 100%;
+    padding: 8px;
+    width: 545px;
+    height: 34px;
+    border-radius: 40px;
+    list-style: none;
 }
 
 .search_logo {
     height: 30px;
-    border-radius: 50%;
-    margin: 0 30px 0 0;
+    filter: invert(50%);
+    filter: contrast(200%);
+}
+.search_logo:hover {
+    filter: invert(0%);
+    filter: contrast(800%);
+
 }
 
 .searchBar {
     display: flex;
     align-items: center;
-    padding: 8px;
-    width: 450px;
-    height: 34px;
-    border-radius: 20px;
+    width: 90%;
+    padding: 3px 5px;
+    border-radius: 40px;
     background-color: #292929;
 }
 
-.search_tab {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    align-self: center;
+.searchPlace {
+    width: 75%;
+    height: 100%;
+    background-color: #292929;
+    height: 34px;
+    padding: 3px 5px;
+    font-size: 25px;
+    color: #fff;
+    border: none;
+}
 
+
+.close {
+    visibility: hidden;
+    margin: 0 15px 0 0;
+    cursor: pointer;
+    filter: invert(75%);
+    height: 20px;
+}
+
+.close:hover {
+    filter: invert(90%);
+    transform: scale(105%);
+}
+
+.browse {
+    margin: 0 0 0 10px;
+    filter: invert(55%);
+    height: 32px;
+    /* background-color: aqua; */
+    border-radius: 0 50% 50% 0;
+}
+
+.browse:hover {
+    filter: invert(10%);
+    transform: scale(103%);
+}
+
+.template:hover {
+
+    background-color: #292929;
+    color: #1ed760;
 }
