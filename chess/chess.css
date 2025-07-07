@@ -1,0 +1,64 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body {
+    background-color: #004141;
+    font-family: Arial, sans-serif;
+}
+
+.mainBoard {
+    display: grid;
+    grid-template-areas: 
+        "a8 b8 c8 d8 e8 f8 g8 h8"
+        "a7 b7 c7 d7 e7 f7 g7 h7"
+        "a6 b6 c6 d6 e6 f6 g6 h6"
+        "a5 b5 c5 d5 e5 f5 g5 h5"
+        "a4 b4 c4 d4 e4 f4 g4 h4"
+        "a3 b3 c3 d3 e3 f3 g3 h3"
+        "a2 b2 c2 d2 e2 f2 g2 h2"
+        "a1 b1 c1 d1 e1 f1 g1 h1";
+    grid-template-rows: repeat(8, 1fr);
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0;
+    width: 88vmin;
+    height: 88Vmin;
+    border: 20px groove #8f5800;
+}
+.cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 11vmin;
+    min-width: 11vmin;
+    height: 11vmin;
+    min-height: 11vmin;
+}
+.darkc {
+    background-color: #276553;
+}
+.lightc {
+    background-color: #fcd68f;
+}
+
+.piece {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+}
+
+.darkp {
+    filter: invert(0) sepia(100%) saturate(0);
+}
+.lightp {
+    filter: invert(1) sepia(50%) saturate(5);
+}
