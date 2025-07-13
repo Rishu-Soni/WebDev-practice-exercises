@@ -70,27 +70,29 @@ body {
     filter: invert(1) sepia(20%) saturate(5);
 }
 
-.DSelected {
+.selectedDark {
     transform: scale(1.1);
     transition: transform 0.3s ease-in-out;
-    box-shadow: inset .25em .25em 25px #ff0000;
+    box-shadow: inset .7em .7em 20px #00ffff,
+    inset -0.25em -0.25em 10px #00ffff;
     filter: contrast(1.5) brightness(2);
 }
 
-.LSelected {
+.selectedLight {
     transform: scale(1.1);
     transition: transform 0.3s ease-in-out;
-    box-shadow: inset .25em .25em 25px #ff0000;
+    box-shadow: inset .7em .7em 20px #00FFFF,
+    inset -0.25em -0.25em 10px #00ffff;
     filter: invert(1) contrast(1.5) brightness(2);
 }
 
 .possibleMove{
-    border-radius: 10%;
-    box-shadow: inset 0.5em 0.5em 2px #aaff0070,
-                inset -0.5em -0.5em 2px #aaff0070;
-    /* filter:blur(2px); ; */
+    border-radius: 20%;
+    box-shadow: inset 0.35em 0.35em 15px #bc9a00bb,
+                inset -0.35em -0.35em 10px #bc9a00bb;
 }
+
 .possibleMove:hover {
     box-shadow: inset 0.5em 0.5em 50px #ffffff;
-    transition: box-shadow 0.3s ease-in-out;
+    transition: box-shadow 0.4s ease-in-out;
 }
