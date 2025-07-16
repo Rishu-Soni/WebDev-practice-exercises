@@ -4,7 +4,7 @@ const posToCoor = (position) => {      // Converts a position like `a3` to coord
     return [row, col];
 }
 const coortopos = ([row, col]) => {
-    let position = String.fromCharCode(row + 96) + col; // Converts coordinates to position like `a3`
+    let position = String.fromCharCode(row + 96) + String(col); // Converts coordinates to position like `a3`
     return position;
 }
 
@@ -246,81 +246,122 @@ const isKingInCheck = (kingpos) => {
     let directionBishop = [[1, 1], [-1, 1], [1, -1], [-1, -1]];
     let directionsKnight = [[2, 1], [2, -1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [1, -2], [-1, -2]];
     let directionsKing = [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]];
-    let directionPawn = [[1, 1], [1, -1]];
     let [row, col] = posToCoor(`.` + kingpos);
-    let temp = 0;
+    row = parseInt(row);
+    col = parseInt(col);
     let cell = null;
+    let temp = 0;
+    let tempcountforking;
+    console.log(row, col);
     console.log(kingpos);
-    
+    let tempRow = 0;
+    let tempCol = 0;
+
+    if (kingcolor == "darkp") {
+        if ((col - 1) < 3 || (row - 1) < 1 || (row + 1) > 8) return;
+        cell = document.querySelector('.' + String(coortopos([(row + 1), (col - 1)])));
+        console.log(String(coortopos([(row + 1), (col - 1)])));
+        // cell.classList.add("backg");
+        if (cell.querySelector('img') && cell.querySelector('img').classList.contains(".lightp")) {
+            console.log("check by pawn [-1, +1 ]");
+            temp = 1;
+            return true;
+        }
+        cell = document.querySelector('.' + coortopos([(row - 1), (col - 1)]));
+        // cell.classList.add("backg");
+        if (cell.querySelector('img') && cell.querySelector('img').classList.contains(".lightp")) {
+            console.log("check by pawn [-1, -1 ]");
+            temp = 1;
+            return true;
+        }
+    }
+    if (kingcolor == "lightp") {
+        if ((col + 1) < 1 || (row - 1) < 1 || (row + 1) > 8) return;
+        cell = document.querySelector('.' + coortopos([(row + 1), (col + 1)]));
+        // cell.classList.add("backg");
+        if (cell.querySelector('img') && cell.querySelector('img').classList.contains(".darkp")) {
+            console.log("check by pawn [+1, +1 ]");
+            temp = 1;
+            return true;
+        }
+        cell = document.querySelector('.' + coortopos([(row - 1), (col + 1)]));
+        // cell.classList.add("backg");
+        if (cell.querySelector('img') && cell.querySelector('img').classList.contains(".darkp")) {
+            console.log("check by pawn [+1, -1 ]");
+            temp = 1;
+            return true;
+        }
+    }
     directionRook.forEach(([dRow, dCol]) => {
-        while (true) {
-            row += dRow;
-            col += dCol;
-            if (row < 1 || row > 8 || col < 1 || col > 8) break; // Out of bounds
-            cell = document.querySelector('.' + coortopos([row, col]));
-            if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`rook`) && cell.querySelector(`img`).classList.contains(oppSide())) {
-                temp = 1; // King is in check by a rook
+        tempRow = row;
+        tempCol = col;
+        for (let i = 0; i < 8; i++) {
+            console.log("rishu");
+            tempRow += dRow;
+            tempCol += dCol;
+            if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) return; // Out of bounds
+            cell = document.querySelector('.' + coortopos([tempRow, tempCol]));
+            cell.classList.add("backg");
+            if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`rook`) && cell.querySelector(`img`).classList.contains(kingOppColor)) {
+                console.log("check by rook");
+                temp = 1;
+                return true
             }
-            if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`queen`) && cell.querySelector(`img`).classList.contains(oppSide())) {
-                temp = 1; // King is in check by a queen
+            if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`queen`) && cell.querySelector(`img`).classList.contains(kingOppColor)) {
+                console.log("check by queen as rook");
+                temp = 1;
+                return true;
             }
-            if (cell.querySelector(`img`)) break; // Blocked by another piece
+            if (cell.querySelector(`img`)) return; // Blocked by another piece
+
         }
     });
     directionBishop.forEach(([dRow, dCol]) => {
-        while (true) {
-            row += dRow;
-            col += dCol;
-            if (row < 1 || row > 8 || col < 1 || col > 8) break; // Out of bounds
-            cell = document.querySelector('.' + coortopos([row, col]));
-            if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`bishop`) && cell.querySelector(`img`).classList.contains(oppSide())) {
-                temp = 1; // King is in check by a bishop
+        tempcountforking = 0;
+        tempRow = row;
+        tempCol = col;
+        while (tempcountforking < 8) {
+            tempRow += dRow;
+            tempCol += dCol;
+            if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) break; // Out of bounds
+            cell = document.querySelector('.' + coortopos([tempRow, tempCol]));
+            cell.classList.add("backg");
+            if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`bishop`) && cell.querySelector(`img`).classList.contains(kingOppColor)) {
+                console.log("check by bishop");
+                temp = 1;
+                return true;
             }
-            if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`queen`) && cell.querySelector(`img`).classList.contains(oppSide())) {
-                temp = 1; // King is in check by a queen
+            if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`queen`) && cell.querySelector(`img`).classList.contains(kingOppColor)) {
+                console.log("check by queen as bishop");
+                temp = 1;
+                return true;
             }
             if (cell.querySelector(`img`)) break; // Blocked by another piece
+            tempcountforking++;
         }
+
     });
     directionsKnight.forEach(([dRow, dCol]) => {
         if ((row + dRow) < 1 || (row + dRow) > 8 || (col + dCol) < 1 || (col + dCol) > 8) return; // If the move is out of bounds, skip it
         cell = document.querySelector('.' + coortopos([(row + dRow), (col + dCol)]));
-        if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`knight`) && cell.querySelector(`img`).classList.contains(oppSide())) {
-            temp = 1; // King is in check by a knight
+        cell.classList.add("backg");
+        if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`knight`) && cell.querySelector(`img`).classList.contains(kingOppColor)) {
+            console.log("check by knight");
+            temp = 1;
+            return true;
         }
     });
     directionsKing.forEach(([dRow, dCol]) => {
         if ((row + dRow) < 1 || (row + dRow) > 8 || (col + dCol) < 1 || (col + dCol) > 8) return; // If the move is out of bounds, skip it
         cell = document.querySelector('.' + coortopos([(row + dRow), (col + dCol)]));
-        if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`king`) && cell.querySelector(`img`).classList.contains(oppSide())) {
-            temp = 1; // King is in check by a king
+        if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`king`) && cell.querySelector(`img`).classList.contains(kingOppColor)) {
+            console.log("check by king");
+            temp = 1;
+            return true;
         }
     });
 
-    if (kingcolor == "darkp") {
-        if ((row - 1) < 1 || (col - 1) < 1 || (col + 1) > 8) return;
-        cell = document.querySelector('.' + coortopos([(row - 1), (col + 1)]));
-        if (cell.querySelector('img') && cell.querySelector('img').classList.contains(".lightp")) {
-            temp = 1;
-        }
-        cell = document.querySelector('.' + coortopos([(row - 1), (col - 1)]));
-        if (cell.querySelector('img') && cell.querySelector('img').classList.contains(".lightp")) {
-            temp = 1;
-        }
-    }
-    if (kingcolor == "lightp") {
-        if ((row + 1) < 1 || (col - 1) < 1 || (col + 1) > 8) return;
-        cell = document.querySelector('.' + coortopos([(row + 1), (col + 1)]));
-        if (cell.querySelector('img') && cell.querySelector('img').classList.contains(".darkp")) {
-            temp = 1;
-        }
-        cell = document.querySelector('.' + coortopos([(row + 1), (col - 1)]));
-        if (cell.querySelector('img') && cell.querySelector('img').classList.contains(".darkp")) {
-            temp = 1;
-        }
-    }
-
-    return temp;
+    if (temp == 1) return true;
 }
 const posblMovOFClickPiece = (position) => {
     if (clickfromCellDiv.querySelector(`img`).classList.contains(`rook`)) {
@@ -372,26 +413,46 @@ const currentSide = () => {
         return `lightp`;
 }
 const getOppSide = (piece) => {
-    if (piece.classList.contains("darkp")) {
-        return "lightp";
+    if (piece) {
+        if (piece.classList.contains("darkp") || (piece.querySelector('img') && piece.querySelector('img').classList.contains("darkp"))) {
+            return "lightp";
+        }
+        if ((piece && piece.classList.contains("lightp")) || (piece.querySelector('img') && piece.querySelector('img').classList.contains("lightp"))) {
+            return "darkp";
+        }
     }
-    if (piece.classList.contains("lightp")) {
-        return "darkp";
+}
+const getCurSide = (piece) => {
+    if (piece) {
+        if ((piece && piece.classList.contains("darkp")) || (piece.querySelector('img') && piece.querySelector('img').classList.contains("darkp"))) {
+            return "darkp";
+        }
+        if ((piece && piece.classList.contains("lightp")) || (piece.querySelector('img') && piece.querySelector('img').classList.contains("lightp"))) {
+            return "lightp";
+        }
     }
 }
 
 const getClicked = (position) => {
 
     clickfromCellDiv = document.querySelector(position);        // We got the cell user clicked on
+
     let kings = document.querySelectorAll(`.king`);
     kings.forEach(king => {
-        if (king.classList.contains(oppSide())) {
+        if (king.classList.contains(currentSide())) {
             kingpos = king.parentElement.id;
-            kingcolor = oppSide();
+            kingcolor = getCurSide(king);
         }
     });
+    if (isKingInCheck(kingpos)) {
+        console.warn("King is in check!");
+    }
+    else {
+        console.warn("king is safe")
+    }
 
     console.log(kingcolor);
+
 
     if (clickfromCellDiv.classList.contains(`possibleMove`) && preClickedCell) {   // Moving piece and Turn rotation
         let imgToMove = preClickedCell.firstElementChild;
@@ -399,9 +460,6 @@ const getClicked = (position) => {
             clickfromCellDiv.innerHTML = ``;
             preClickedCell.innerHTML = ``;
             clickfromCellDiv.appendChild(imgToMove); // Move the piece to the clicked cell
-            if (isKingInCheck(kingpos) == 1) {
-                console.warn("King is in check!");
-            }
             deselectall();
             if (oppSide() === `lightp` || oppSide() === `darkp`) {
                 document.querySelectorAll(`.` + oppSide()).forEach(opoSide => {
@@ -434,14 +492,13 @@ const getClicked = (position) => {
         preClickedCell = clickfromCellDiv;
     }
 }
-
 var preClickedCell = null;
 var clickfromCellDiv = null;
 var checkPosibilitycount = 0;
 var kingpos = null;
 var kingcolor = null;
+var kingOppColor = null;
 // var kingInCheck = false;
-
 document.querySelectorAll(`.darkp`).forEach(opoSide => {
     opoSide.classList.add(`inactive`);
 });
