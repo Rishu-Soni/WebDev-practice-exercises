@@ -1,15 +1,15 @@
-const posToCoor = (position) => {      // Converts a position like `a3` to coordinates column and row like 1, 3
+const posToCoor = (position) => {
     let row = position.charCodeAt(1) - 96;
     let col = parseInt(position[2]);
     return [row, col];
 }
 const coortopos = ([row, col]) => {
-    let position = String.fromCharCode(row + 96) + String(col); // Converts coordinates to position like `a3`
+    let position = String.fromCharCode(row + 96) + String(col);
     return position;
 }
 
 const rookMovPattern = ([row, col]) => {
-    let directions = [[row, 0], [0, col], [-row, 0], [0, -col]]; // Rook can move in straight lines horizontally and vertically
+    let directions = [[row, 0], [0, col], [-row, 0], [0, -col]];
 
     directions.forEach(([dRow, dCol]) => {
         if (dRow > 0 && dCol == 0) {
@@ -151,25 +151,318 @@ const bishopMovPattern = ([row, col]) => {
 const knightMovPattern = ([row, col]) => {
     let directions = [[2, 1], [2, -1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [1, -2], [-1, -2]];
     directions.forEach(([dRow, dCol]) => {
-        if ((row + dRow) < 1 || (row + dRow) > 8 || (col + dCol) < 1 || (col + dCol) > 8) { // If the move is out of bounds, skip it
+        if ((row + dRow) < 1 || (row + dRow) > 8 || (col + dCol) < 1 || (col + dCol) > 8) {
             return;
         }
-
         if (document.querySelector('.' + coortopos([(row + dRow), (col + dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([(row + dRow), (col + dCol)])).querySelector(`img`).classList.contains(currentSide())) {
             return;
         }
-
         document.querySelector('.' + coortopos([(row + dRow), (col + dCol)])).classList.add(`possibleMove`);
     });
 }
 const kingMovPattern = ([row, col]) => {
     let directions = [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]];
+    let directionKnight = [[2, 1], [2, -1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [1, -2], [-1, -2]];
+    let tempRow = row;
+    let tempCol = col;
     directions.forEach(([dRow, dCol]) => {
-        if ((row + dRow) < 1 || (row + dRow) > 8 || (col + dCol) < 1 || (col + dCol) > 8) return; // If the move is out of bounds, skip it
-        if (document.querySelector('.' + coortopos([(row + dRow), (col + dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([(row + dRow), (col + dCol)])).querySelector(`img`).classList.contains(currentSide())) {
-            return; // If the cell already has a piece of the same side, skip it
+        if ((row + dRow) < 1 || (row + dRow) > 8 || (col + dCol) < 1 || (col + dCol) > 8) return;
+        if (document.querySelector('.' + coortopos([(row + dRow), (col + dCol)])) && document.querySelector('.' + coortopos([(row + dRow), (col + dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([(row + dRow), (col + dCol)])).querySelector(`img`).classList.contains(currentSide())) {
+            return;
         }
-        document.querySelector('.' + coortopos([(row + dRow), (col + dCol)])).classList.add(`possibleMove`);
+        // Is rook there
+        if ((dRow == 1 && dCol == 1) || (dRow == -1 && dCol == 1) || (dRow == -1 && dCol == -1) || (dRow == 1 && dCol == -1)) {
+            tempRow = row + dRow;
+            tempCol = col + dCol;
+            if (document.querySelector('.' + coortopos([tempRow, tempCol])) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`rook`)) {
+                document.querySelector('.' + coortopos([row, tempCol])).classList.add(`impossibleMove`);
+                document.querySelector('.' + coortopos([row - dRow, tempCol])).classList.add(`impossibleMove`);
+                document.querySelector('.' + coortopos([tempRow, col])).classList.add(`impossibleMove`);
+                document.querySelector('.' + coortopos([tempRow - dCol, col])).classList.add(`impossibleMove`);
+                return;
+            }
+            for (i = 0; i < 6; i++) {
+                tempRow += dRow;
+                if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) return;
+                if (document.querySelector('.' + coortopos([tempRow, tempCol])) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(kingcolor)) {
+                    return;
+                }
+                if (document.querySelector('.' + coortopos([tempRow, tempCol])) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`rook`)) {
+                    for (i = row + dRow; i > row - (2 * dRow); i - dRow) {
+                        document.querySelector('.' + coortopos([i, tempCol])).classList.add(`impossibleMove`);
+                    }
+                    return;
+                }
+            }
+            tempRow = row + dRow;
+            tempCol = col + dCol;
+            while (true) {
+                tempCol += dCol;
+                if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) return;
+                if (document.querySelector('.' + coortopos([tempRow, tempCol])) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(kingcolor)) {
+                    return;
+                }
+                if (document.querySelector('.' + coortopos([tempRow, tempCol])) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`rook`)) {
+                    for (i = col + dCol; i > col - (2 * dCol); i - dCol) {
+                        document.querySelector('.' + coortopos([tempRow, i])).classList.add(`impossibleMove`);
+                    }
+                }
+            }
+        }
+        // Is bishop there
+        if ((dRow == 0 && dCol == 1) || (dRow == 1 && dCol == 0) || (dRow == 0 && dCol == -1) || (dRow == -1 && dCol == 0)) {
+            tempRow = row + dRow;
+            tempCol = col + dCol;
+            if (document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`bishop`)) {
+                if (dCol == 0) {
+                    document.querySelector('.' + coortopos([row + 1, tempCol])).classList.add(`impossibleMove`);
+                    document.querySelector('.' + coortopos([row - 1, tempCol])).classList.add(`impossibleMove`);
+                }
+                if (dRow == 0) {
+                    document.querySelector('.' + coortopos([tempRow, col + 1])).classList.add(`impossibleMove`);
+                    document.querySelector('.' + coortopos([tempRow, col - 1])).classList.add(`impossibleMove`);
+                }
+
+
+                document.querySelector('.' + coortopos([row, tempCol])).classList.add(`impossibleMove`);
+                return;
+            }
+            if (dCol == 0) {
+                for (i = 1; i <= 6; i++) {
+                    if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) return;
+                    if (document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol + 1])) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol + 1])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol + 1])).querySelector(`img`).classList.contains(kingcolor)) {
+                        return;
+                    }
+                    if (document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol + 1])) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol + 1])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol + 1])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`bishop`)) {
+                        document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+                        document.querySelector('.' + coortopos([tempRow - dRow, tempCol - 1])).classList.add(`impossibleMove`);
+                    }
+                }
+                for (i = 1; i <= 6; i++) {
+                    if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) return;
+                    if (document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol - 1])) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol - 1])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol - 1])).querySelector(`img`).classList.contains(kingcolor)) {
+                        return;
+                    }
+                    if (document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol - 1])) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol - 1])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol - 1])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`bishop`)) {
+                        document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+                        document.querySelector('.' + coortopos([tempRow - dRow, tempCol + 1])).classList.add(`impossibleMove`);
+                    }
+                }
+            }
+            if (dRow == 0) {
+                for (i = 1; i <= 6; i++) {
+                    if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) return;
+                    if (document.querySelector('.' + coortopos([tempRow + 1, tempCol + (i * dCol)])) && document.querySelector('.' + coortopos([tempRow + 1, tempCol + (i * dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + 1, tempCol + (i * dCol)])).querySelector(`img`).classList.contains(kingcolor)) {
+                        return;
+                    }
+                    if (document.querySelector('.' + coortopos([tempRow + 1, tempCol + (i * dCol)])) && document.querySelector('.' + coortopos([tempRow + 1, tempCol + (i * dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + 1, tempCol + (i * dCol)])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`bishop`)) {
+                        document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+                        document.querySelector('.' + coortopos([tempRow - 1, tempCol - dCol])).classList.add(`impossibleMove`);
+                    }
+                }
+                for (i = 1; i <= 6; i++) {
+                    if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) return;
+                    if (document.querySelector('.' + coortopos([tempRow + 1, tempCol - (i * dCol)])) && document.querySelector('.' + coortopos([tempRow + 1, tempCol - (i * dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + 1, tempCol - (i * dCol)])).querySelector(`img`).classList.contains(kingcolor)) {
+                        return;
+                    }
+                    if (document.querySelector('.' + coortopos([tempRow + 1, tempCol - (i * dCol)])) && document.querySelector('.' + coortopos([tempRow + 1, tempCol - (i * dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + 1, tempCol - (i * dCol)])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`bishop`)) {
+                        document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+                        document.querySelector('.' + coortopos([tempRow - 1, tempCol + dCol])).classList.add(`impossibleMove`);
+                    }
+                }
+            }
+        }
+        // Is knight there
+        directionKnight.forEach(([drow, dcol]) => {
+            if ((row + dRow + drow) < 1 || (row + dRow + drow) > 8 || (col + dCol + dcol) < 1 || (col + dCol + dcol) > 8) return;
+            if (document.querySelector('.' + coortopos([(row + drow + dRow), (col + dcol + dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([(row + drow + dRow), (col + dcol + dCol)])).querySelector(`img`).classList.contains(kingOppColor)) {
+                document.querySelector('.' + coortopos([row + dRow, col + dCol])).classList.add(`impossibleMove`);
+            }
+        });
+        //Is king there
+        if ((dRow == 1 && dCol == 1) || (dRow == -1 && dCol == 1) || (dRow == -1 && dCol == -1) || (dRow == 1 && dCol == -1)) {
+            tempRow = row + dRow;
+            tempCol = col + dCol;
+            if (document.querySelector('.' + coortopos([(tempRow + dRow), (tempCol + dCol)])) && document.querySelector('.' + coortopos([(tempRow + dRow), (tempCol + dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([(tempRow + dRow), (tempCol + dCol)])).querySelector(`img`).classList.contains(oppSide()) && document.querySelector('.' + coortopos([(tempRow + dRow), (tempCol + dCol)])).querySelector(`img`).classList.contains(`king`)) {
+                document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+            }
+            if (document.querySelector('.' + coortopos([tempRow, (tempCol + dCol)])) && document.querySelector('.' + coortopos([tempRow, (tempCol + dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, (tempCol + dCol)])).querySelector(`img`).classList.contains(oppSide()) && document.querySelector('.' + coortopos([tempRow, (tempCol + dCol)])).querySelector(`img`).classList.contains(`king`)) {
+                document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+                document.querySelector('.' + coortopos([row, tempCol])).classList.add(`impossibleMove`);
+            }
+            if (document.querySelector('.' + coortopos([(tempRow + dRow), tempCol])) && document.querySelector('.' + coortopos([(tempRow + dRow), tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([(tempRow + dRow), tempCol])).querySelector(`img`).classList.contains(oppSide()) && document.querySelector('.' + coortopos([(tempRow + dRow), tempCol])).querySelector(`img`).classList.contains(`king`)) {
+                document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+                document.querySelector('.' + coortopos([tempRow, col])).classList.add(`impossibleMove`);
+            }
+        }
+        if ((dRow == 0 && dCol == 1) || (dRow == 1 && dCol == 0) || (dRow == 0 && dCol == -1) || (dRow == -1 && dCol == 0)) {
+            tempRow = row + dRow;
+            tempCol = col + dCol;
+            if (document.querySelector('.' + coortopos([(tempRow + dRow), (tempCol + dCol)])) && document.querySelector('.' + coortopos([(tempRow + dRow), (tempCol + dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([(tempRow + dRow), (tempCol + dCol)])).querySelector(`img`).classList.contains(oppSide()) && document.querySelector('.' + coortopos([(tempRow + dRow), (tempCol + dCol)])).querySelector(`img`).classList.contains(`king`)) {
+                document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+                if (dCol == 0) {
+                    document.querySelector('.' + coortopos([tempRow, tempCol + 1])).classList.add(`impossibleMove`);
+                    document.querySelector('.' + coortopos([tempRow, tempCol - 1])).classList.add(`impossibleMove`);
+                }
+                if (dRow == 0) {
+                    document.querySelector('.' + coortopos([tempRow + 1, tempCol])).classList.add(`impossibleMove`);
+                    document.querySelector('.' + coortopos([tempRow - 1, tempCol])).classList.add(`impossibleMove`);
+                }
+            }
+        }
+        //Is queen there
+        if ((dRow == 1 && dCol == 1) || (dRow == -1 && dCol == 1) || (dRow == -1 && dCol == -1) || (dRow == 1 && dCol == -1)) {     // Queen as rook
+            tempRow = row + dRow;
+            tempCol = col + dCol;
+            for (i = 1; i <= 6; i++) {
+                tempRow += dRow;
+                if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) return;
+                if (document.querySelector('.' + coortopos([tempRow, tempCol])) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(kingcolor)) {
+                    return;
+                }
+                if (document.querySelector('.' + coortopos([tempRow, tempCol])) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`queen`)) {
+                    for (j = row + dRow; j > row - (2 * dRow); j - dRow) {
+                        document.querySelector('.' + coortopos([j, tempCol])).classList.add(`impossibleMove`);
+                    }
+                    if (i == 1) {
+                        document.querySelector('.' + coortopos([tempRow - dRow, tempCol - dCol])).classList.add(`impossibleMove`);
+                        document.querySelector('.' + coortopos([tempRow - (2 * dRow), tempCol - (2 * dCol)])).classList.add(`impossibleMove`);
+
+                    }
+                    if (i == 2) {
+                        document.querySelector('.' + coortopos([tempRow - (2 * dRow), tempCol - (2 * dCol)])).classList.add(`impossibleMove`);
+
+                    }
+                    return;
+                }
+                if (document.querySelector('.' + coortopos([tempRow, tempCol])) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`piece`)) {
+                    return;
+                }
+            }
+            tempRow = row + dRow;
+            tempCol = col + dCol;
+            for (i = 1; i <= 6; i++) {
+                tempCol += dCol;
+                if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) return;
+                if (document.querySelector('.' + coortopos([tempRow, tempCol])) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(kingcolor)) {
+                    return;
+                }
+                if (document.querySelector('.' + coortopos([tempRow, tempCol])) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`queen`)) {
+                    for (j = col + dCol; j > col - (2 * dCol); j - dCol) {
+                        document.querySelector('.' + coortopos([tempRow, j])).classList.add(`impossibleMove`);
+                    }
+                    if (i == 1) {
+                        document.querySelector('.' + coortopos([tempRow - dRow, tempCol - dCol])).classList.add(`impossibleMove`);
+                        document.querySelector('.' + coortopos([tempRow - (2 * dRow), tempCol - (2 * dCol)])).classList.add(`impossibleMove`);
+
+                    }
+                    if (i == 2) {
+                        document.querySelector('.' + coortopos([tempRow - (2 * dRow), tempCol - (2 * dCol)])).classList.add(`impossibleMove`);
+
+                    }
+                    return;
+                }
+                if (document.querySelector('.' + coortopos([tempRow, tempCol])) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`piece`)) {
+                    return;
+                }
+            }
+        }
+        if ((dRow == 0 && dCol == 1) || (dRow == 1 && dCol == 0) || (dRow == 0 && dCol == -1) || (dRow == -1 && dCol == 0)) {       //Queen as Bishop
+            if (dCol == 0) {
+                tempRow = row + dRow;
+                tempCol = col + dCol;
+                for (i = 1; i <= 6; i++) {
+                    if (tempRow + (i * dRow) < 1 || tempRow + (i * dRow) > 8 || tempCol + i < 1 || tempCol + i > 8) return;
+                    if (document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol + i])) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol + i])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol + i])).querySelector(`img`).classList.contains(kingcolor)) {
+                        return;
+                    }
+                    if (document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol + i])) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol + i])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol + i])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`queen`)) {
+                        document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+                        document.querySelector('.' + coortopos([tempRow - dRow, tempCol - 1])).classList.add(`impossibleMove`);
+                        if (i == 1) {
+                            document.querySelector('.' + coortopos([tempRow, tempCol + 1])).classList.add(`impossibleMove`);
+                            document.querySelector('.' + coortopos([tempRow - dRow, tempCol + 1])).classList.add(`impossibleMove`);
+                            document.querySelector('.' + coortopos([tempRow - (2 * dRow), tempCol + 1])).classList.add(`impossibleMove`);
+                        }
+                    }
+                }
+                tempRow = row + dRow;
+                tempCol = col + dCol;
+                for (i = 1; i <= 6; i++) {
+                    if (tempRow + (i * dRow) < 1 || tempRow + (i * dRow) > 8 || tempCol - i < 1 || tempCol - i > 8) return;
+                    if (document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol - i])) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol - i])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol - i])).querySelector(`img`).classList.contains(kingcolor)) {
+                        return;
+                    }
+                    if (document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol - i])) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol - i])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + (i * dRow), tempCol - i])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`queen`)) {
+                        document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+                        document.querySelector('.' + coortopos([tempRow - dRow, tempCol + 1])).classList.add(`impossibleMove`);
+                        if (i == 1) {
+                            document.querySelector('.' + coortopos([tempRow, tempCol - 1])).classList.add(`impossibleMove`);
+                            document.querySelector('.' + coortopos([tempRow - dRow, tempCol - 1])).classList.add(`impossibleMove`);
+                            document.querySelector('.' + coortopos([tempRow - (2 * dRow), tempCol - 1])).classList.add(`impossibleMove`);
+                        }
+                    }
+                }
+            }
+            if (dRow == 0) {
+                tempRow = row + dRow;
+                tempCol = col + dCol;
+                for (i = 1; i <= 6; i++) {
+                    if (tempRow + i < 1 || tempRow + i > 8 || tempCol + (i * dCol) < 1 || tempCol + (i * dCol) > 8) return;
+                    if (document.querySelector('.' + coortopos([tempRow + i, tempCol + (i * dCol)])) && document.querySelector('.' + coortopos([tempRow + i, tempCol + (i * dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + i, tempCol + (i * dCol)])).querySelector(`img`).classList.contains(kingcolor)) {
+                        return;
+                    }
+                    if (document.querySelector('.' + coortopos([tempRow + i, tempCol + (i * dCol)])) && document.querySelector('.' + coortopos([tempRow + i, tempCol + (i * dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + i, tempCol + (i * dCol)])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`queen`)) {
+                        document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+                        document.querySelector('.' + coortopos([tempRow - 1, tempCol - dCol])).classList.add(`impossibleMove`);
+                        if (i == 1) {
+                            document.querySelector('.' + coortopos([tempRow + 1, tempCol])).classList.add(`impossibleMove`);
+                            document.querySelector('.' + coortopos([tempRow + 1, tempCol - dCol])).classList.add(`impossibleMove`);
+                            document.querySelector('.' + coortopos([tempRow + 1, tempCol - (2 * dCol)])).classList.add(`impossibleMove`);
+                        }
+                    }
+                }
+                tempRow = row + dRow;
+                tempCol = col + dCol;
+                for (i = 1; i <= 6; i++) {
+                    if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) return;
+                    if (document.querySelector('.' + coortopos([tempRow - i, tempCol - (i * dCol)])) && document.querySelector('.' + coortopos([tempRow - i, tempCol - (i * dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow - i, tempCol - (i * dCol)])).querySelector(`img`).classList.contains(kingcolor)) {
+                        return;
+                    }
+                    if (document.querySelector('.' + coortopos([tempRow - i, tempCol - (i * dCol)])) && document.querySelector('.' + coortopos([tempRow - i, tempCol - (i * dCol)])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow - i, tempCol - (i * dCol)])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`queen`)) {
+                        document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+                        document.querySelector('.' + coortopos([tempRow + 1, tempCol + dCol])).classList.add(`impossibleMove`);
+                    }
+                    if (i == 1) {
+                        document.querySelector('.' + coortopos([tempRow - 1, tempCol])).classList.add(`impossibleMove`);
+                        document.querySelector('.' + coortopos([tempRow - 1, tempCol - dCol])).classList.add(`impossibleMove`);
+                        document.querySelector('.' + coortopos([tempRow - 1, tempCol - (2 * dCol)])).classList.add(`impossibleMove`);
+                    }
+                }
+            }
+        }
+        // Is pawn there
+        tempRow = row + dRow;
+        tempCol = col + dCol;
+        if (kingcolor == `lightp`) {
+            if (tempRow - 1 < 1 || tempRow - 1 > 8 || tempCol + 1 < 1 || tempCol + 1 > 8) return;
+            if (tempRow + 1 < 1 || tempRow + 1 > 8 || tempCol + 1 < 1 || tempCol + 1 > 8) return;
+            if (document.querySelector('.' + coortopos([tempRow - 1, tempCol + 1])) && document.querySelector('.' + coortopos([tempRow - 1, tempCol + 1])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow - 1, tempCol + 1])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`pawn`))
+                document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+            if (document.querySelector('.' + coortopos([tempRow + 1, tempCol + 1])) && document.querySelector('.' + coortopos([tempRow + 1, tempCol + 1])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + 1, tempCol + 1])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`pawn`))
+                document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+        }
+        if (kingcolor == `darkp`) {
+            if (tempRow - 1 < 1 || tempRow - 1 > 8 || tempCol - 1 < 1 || tempCol - 1 > 8) return;
+            if (tempRow + 1 < 1 || tempRow + 1 > 8 || tempCol - 1 < 1 || tempCol - 1 > 8) return;
+            if (document.querySelector('.' + coortopos([tempRow - 1, tempCol - 1])) && document.querySelector('.' + coortopos([tempRow - 1, tempCol - 1])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow - 1, tempCol - 1])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`pawn`))
+                document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+            if (document.querySelector('.' + coortopos([tempRow + 1, tempCol - 1])) && document.querySelector('.' + coortopos([tempRow + 1, tempCol - 1])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow + 1, tempCol - 1])).querySelector(`img`).classList.contains(kingOppColor) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(`pawn`))
+                document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`impossibleMove`);
+        }
+        if (document.querySelector('.' + coortopos([(row + dRow), (col + dCol)])) && !document.querySelector('.' + coortopos([(row + dRow), (col + dCol)])).classList.contains(`impossibleMove`)) {
+            document.querySelector('.' + coortopos([(row + dRow), (col + dCol)])).classList.add(`possibleMove`);
+        }
     });
 }
 const pawnMovPattern = ([row, col]) => {
@@ -181,33 +474,31 @@ const pawnMovPattern = ([row, col]) => {
         if (document.querySelector('.' + coortopos([row - 1, col - 1])).querySelector(`img`) && document.querySelector('.' + coortopos([row - 1, col - 1])).querySelector(`img`).classList.contains(oppSide())) {
             document.querySelector('.' + coortopos([row - 1, col - 1])).classList.add(`possibleMove`);
         }
-        if (col == 7) { // If the pawn is on its starting position
-
-            if (document.querySelector('.' + coortopos([row, col - 1])).querySelector(`img`)) {
-                return;
-            }
-
-            if (document.querySelector('.' + coortopos([row, col - 2])).querySelector(`img`)) {
-                document.querySelector('.' + coortopos([row, col - 1])).classList.add(`possibleMove`);
-                return;
-            }
-
-            document.querySelector('.' + coortopos([row, col - 1])).classList.add(`possibleMove`);
-            document.querySelector('.' + coortopos([row, col - 2])).classList.add(`possibleMove`);
-        }
-        // else if (col == 1) {
-
-        // }
-        else {
+        if (col == 7) {
 
             if (document.querySelector('.' + coortopos([row, col - 1])).querySelector(`img`)) {
                 return;
             }
 
             document.querySelector('.' + coortopos([row, col - 1])).classList.add(`possibleMove`);
+            return;
         }
 
+        document.querySelector('.' + coortopos([row, col - 1])).classList.add(`possibleMove`);
+        document.querySelector('.' + coortopos([row, col - 2])).classList.add(`possibleMove`);
     }
+    // else if (col == 1) {
+
+    // }
+    // else {
+
+    //     if (document.querySelector('.' + coortopos([row, col - 1])).querySelector(`img`)) {
+    //         return;
+    //     }
+
+    //     document.querySelector('.' + coortopos([row, col - 1])).classList.add(`possibleMove`);
+    // }
+
     else if (clickfromCellDiv.querySelector(`img`).classList.contains(`lightp`)) {
         if (document.querySelector('.' + coortopos([row + 1, col + 1])).querySelector(`img`) && document.querySelector('.' + coortopos([row + 1, col + 1])).querySelector(`img`).classList.contains(oppSide())) {
             document.querySelector('.' + coortopos([row + 1, col + 1])).classList.add(`possibleMove`);
@@ -215,7 +506,7 @@ const pawnMovPattern = ([row, col]) => {
         if (document.querySelector('.' + coortopos([row - 1, col + 1])).querySelector(`img`) && document.querySelector('.' + coortopos([row - 1, col + 1])).querySelector(`img`).classList.contains(oppSide())) {
             document.querySelector('.' + coortopos([row - 1, col + 1])).classList.add(`possibleMove`);
         }
-        if (col == 2) { // If the pawn is on its starting position
+        if (col == 2) {
 
             if (document.querySelector('.' + coortopos([row, col + 1])).querySelector(`img`)) {
                 return;
@@ -238,8 +529,8 @@ const pawnMovPattern = ([row, col]) => {
             document.querySelector('.' + coortopos([row, col + 1])).classList.add(`possibleMove`);
         }
     }
-
 }
+
 
 const isKingInCheck = (kingpos) => {
     let directionRook = [[1, 0], [0, 1], [-1, 0], [0, -1]];
@@ -251,44 +542,35 @@ const isKingInCheck = (kingpos) => {
     col = parseInt(col);
     let cell = null;
     let temp = 0;
-    let tempcountforking;
-    console.log(row, col);
-    console.log(kingpos);
     let tempRow = 0;
     let tempCol = 0;
 
     if (kingcolor == "darkp") {
         if ((col - 1) < 3 || (row - 1) < 1 || (row + 1) > 8) return;
         cell = document.querySelector('.' + String(coortopos([(row + 1), (col - 1)])));
-        console.log(String(coortopos([(row + 1), (col - 1)])));
-        // cell.classList.add("backg");
-        if (cell.querySelector('img') && cell.querySelector('img').classList.contains(".lightp")) {
-            console.log("check by pawn [-1, +1 ]");
-            temp = 1;
+        if (cell.querySelector('img') && cell.querySelector('img').classList.contains("lightp")) {
+            temp++;
             return true;
         }
         cell = document.querySelector('.' + coortopos([(row - 1), (col - 1)]));
-        // cell.classList.add("backg");
-        if (cell.querySelector('img') && cell.querySelector('img').classList.contains(".lightp")) {
+        if (cell.querySelector('img') && cell.querySelector('img').classList.contains("zlightp")) {
             console.log("check by pawn [-1, -1 ]");
-            temp = 1;
+            temp++;
             return true;
         }
     }
     if (kingcolor == "lightp") {
         if ((col + 1) < 1 || (row - 1) < 1 || (row + 1) > 8) return;
         cell = document.querySelector('.' + coortopos([(row + 1), (col + 1)]));
-        // cell.classList.add("backg");
-        if (cell.querySelector('img') && cell.querySelector('img').classList.contains(".darkp")) {
+        if (cell.querySelector('img') && cell.querySelector('img').classList.contains("darkp")) {
             console.log("check by pawn [+1, +1 ]");
-            temp = 1;
+            temp++;
             return true;
         }
         cell = document.querySelector('.' + coortopos([(row - 1), (col + 1)]));
-        // cell.classList.add("backg");
-        if (cell.querySelector('img') && cell.querySelector('img').classList.contains(".darkp")) {
+        if (cell.querySelector('img') && cell.querySelector('img').classList.contains("darkp")) {
             console.log("check by pawn [+1, -1 ]");
-            temp = 1;
+            temp++;
             return true;
         }
     }
@@ -296,73 +578,65 @@ const isKingInCheck = (kingpos) => {
         tempRow = row;
         tempCol = col;
         for (let i = 0; i < 8; i++) {
-            console.log("rishu");
             tempRow += dRow;
             tempCol += dCol;
-            if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) return; // Out of bounds
+            if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) return;
             cell = document.querySelector('.' + coortopos([tempRow, tempCol]));
-            cell.classList.add("backg");
             if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`rook`) && cell.querySelector(`img`).classList.contains(kingOppColor)) {
-                console.log("check by rook");
-                temp = 1;
+                temp++;
                 return true
             }
             if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`queen`) && cell.querySelector(`img`).classList.contains(kingOppColor)) {
-                console.log("check by queen as rook");
-                temp = 1;
+                temp++;
                 return true;
             }
-            if (cell.querySelector(`img`)) return; // Blocked by another piece
+            if (cell.querySelector(`img`)) return;
 
         }
     });
     directionBishop.forEach(([dRow, dCol]) => {
-        tempcountforking = 0;
         tempRow = row;
         tempCol = col;
-        while (tempcountforking < 8) {
+        for (let i = 0; i < 8; i++) {
             tempRow += dRow;
             tempCol += dCol;
-            if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) break; // Out of bounds
+            if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) break;
             cell = document.querySelector('.' + coortopos([tempRow, tempCol]));
-            cell.classList.add("backg");
             if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`bishop`) && cell.querySelector(`img`).classList.contains(kingOppColor)) {
-                console.log("check by bishop");
-                temp = 1;
+                temp++;
                 return true;
             }
             if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`queen`) && cell.querySelector(`img`).classList.contains(kingOppColor)) {
-                console.log("check by queen as bishop");
-                temp = 1;
+                temp++;
                 return true;
             }
-            if (cell.querySelector(`img`)) break; // Blocked by another piece
-            tempcountforking++;
+            if (cell.querySelector(`img`)) break;
         }
 
     });
     directionsKnight.forEach(([dRow, dCol]) => {
-        if ((row + dRow) < 1 || (row + dRow) > 8 || (col + dCol) < 1 || (col + dCol) > 8) return; // If the move is out of bounds, skip it
+        if ((row + dRow) < 1 || (row + dRow) > 8 || (col + dCol) < 1 || (col + dCol) > 8) return;
         cell = document.querySelector('.' + coortopos([(row + dRow), (col + dCol)]));
-        cell.classList.add("backg");
         if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`knight`) && cell.querySelector(`img`).classList.contains(kingOppColor)) {
-            console.log("check by knight");
-            temp = 1;
+            temp++;
             return true;
         }
     });
     directionsKing.forEach(([dRow, dCol]) => {
-        if ((row + dRow) < 1 || (row + dRow) > 8 || (col + dCol) < 1 || (col + dCol) > 8) return; // If the move is out of bounds, skip it
+        if ((row + dRow) < 1 || (row + dRow) > 8 || (col + dCol) < 1 || (col + dCol) > 8) return;
         cell = document.querySelector('.' + coortopos([(row + dRow), (col + dCol)]));
         if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(`king`) && cell.querySelector(`img`).classList.contains(kingOppColor)) {
-            console.log("check by king");
-            temp = 1;
+            temp++;
             return true;
         }
     });
 
-    if (temp == 1) return true;
+    return temp;
 }
+const possibleCheckMove = () => {
+
+}
+
 const posblMovOFClickPiece = (position) => {
     if (clickfromCellDiv.querySelector(`img`).classList.contains(`rook`)) {
         rookMovPattern(posToCoor(position));
@@ -407,9 +681,9 @@ const oppSide = () => {
     }
 }
 const currentSide = () => {
-    if (clickfromCellDiv.querySelector(`img`).classList.contains(`darkp`))
+    if (clickfromCellDiv.querySelector(`img`) && clickfromCellDiv.querySelector(`img`).classList.contains(`darkp`))
         return `darkp`;
-    else if (clickfromCellDiv.querySelector(`img`).classList.contains(`lightp`))
+    else if (clickfromCellDiv.querySelector(`img`) && clickfromCellDiv.querySelector(`img`).classList.contains(`lightp`))
         return `lightp`;
 }
 const getOppSide = (piece) => {
@@ -435,31 +709,24 @@ const getCurSide = (piece) => {
 
 const getClicked = (position) => {
 
-    clickfromCellDiv = document.querySelector(position);        // We got the cell user clicked on
+    clickfromCellDiv = document.querySelector(position);
 
     let kings = document.querySelectorAll(`.king`);
     kings.forEach(king => {
         if (king.classList.contains(currentSide())) {
             kingpos = king.parentElement.id;
             kingcolor = getCurSide(king);
+            kingOppColor = getOppSide(king);
         }
     });
-    if (isKingInCheck(kingpos)) {
-        console.warn("King is in check!");
-    }
-    else {
-        console.warn("king is safe")
-    }
-
-    console.log(kingcolor);
 
 
-    if (clickfromCellDiv.classList.contains(`possibleMove`) && preClickedCell) {   // Moving piece and Turn rotation
+    if (clickfromCellDiv.classList.contains(`possibleMove`) && preClickedCell) {
         let imgToMove = preClickedCell.firstElementChild;
         if (imgToMove) {
             clickfromCellDiv.innerHTML = ``;
             preClickedCell.innerHTML = ``;
-            clickfromCellDiv.appendChild(imgToMove); // Move the piece to the clicked cell
+            clickfromCellDiv.appendChild(imgToMove);
             deselectall();
             if (oppSide() === `lightp` || oppSide() === `darkp`) {
                 document.querySelectorAll(`.` + oppSide()).forEach(opoSide => {
@@ -471,21 +738,30 @@ const getClicked = (position) => {
             }
         }
     }
-    else {  // Deselect all if clicked in other area
+    else {
         deselectall();
     }
     if (clickfromCellDiv.querySelector(`img`) && clickfromCellDiv.querySelector(`img`).classList.contains(`inactive`)) {
-        console.warn("Its not your TURN");
         return;
     }
     else {
-        if (clickfromCellDiv.querySelector(`img`) && clickfromCellDiv.querySelector(`img`).classList.contains(`darkp`)) {           // If there is an piece in the cell
+        if (clickfromCellDiv.querySelector(`img`) && clickfromCellDiv.querySelector(`img`).classList.contains(`darkp`)) {
             clickfromCellDiv.querySelector(`img`).classList.add(`selectedDark`);
         }
-        if (clickfromCellDiv.querySelector(`img`) && clickfromCellDiv.querySelector(`img`).classList.contains(`lightp`)) {   // If the selected piece is light
+        if (clickfromCellDiv.querySelector(`img`) && clickfromCellDiv.querySelector(`img`).classList.contains(`lightp`)) {
             clickfromCellDiv.querySelector(`img`).classList.add(`selectedLight`);
         }
         if (clickfromCellDiv.querySelector(`img`)) {
+            if (isKingInCheck(kingpos) > 1) {
+                console.warn("King is in double check!");
+                if (clickfromCellDiv.querySelector(`king`)) {
+                    kingMovPattern(posToCoor(kingpos));
+                }
+                return;
+            }
+            else if (isKingInCheck(kingpos) == 1) {
+                console.warn("king is in check");
+            }
             posblMovOFClickPiece(position);
 
         }
@@ -498,7 +774,6 @@ var checkPosibilitycount = 0;
 var kingpos = null;
 var kingcolor = null;
 var kingOppColor = null;
-// var kingInCheck = false;
 document.querySelectorAll(`.darkp`).forEach(opoSide => {
     opoSide.classList.add(`inactive`);
 });

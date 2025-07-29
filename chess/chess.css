@@ -9,9 +9,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-body {
     background-color: #004141;
     font-family: Arial, sans-serif;
 }
@@ -37,6 +34,7 @@ body {
 }
 
 .cell {
+    z-index: 5;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -60,12 +58,18 @@ body {
     object-fit: contain;
 }
 
+.piece:hover {
+    translate: -5px -5px;
+    transition-duration: 0.2s;
+}
+
 .darkp {
     padding: 11%;
     filter: invert(0);
 }
 
 .lightp {
+    /* transform: translate(2); */
     padding: 11%;
     filter: invert(1) sepia(20%) saturate(5);
 }
@@ -74,7 +78,7 @@ body {
     transform: scale(1.1);
     transition: transform 0.3s ease-in-out;
     box-shadow: inset .7em .7em 20px #00ffff,
-    inset -0.25em -0.25em 10px #00ffff;
+        inset -0.25em -0.25em 10px #00ffff;
     filter: contrast(1.5) brightness(2);
 }
 
@@ -82,21 +86,25 @@ body {
     transform: scale(1.1);
     transition: transform 0.3s ease-in-out;
     box-shadow: inset .7em .7em 20px #00FFFF,
-    inset -0.25em -0.25em 10px #00ffff;
+        inset -0.25em -0.25em 10px #00ffff;
     filter: invert(1) contrast(1.5) brightness(2);
 }
 
-.possibleMove{
+.possibleMove {
     border-radius: 20%;
     box-shadow: inset 0.35em 0.35em 15px #bc9a00bb,
-                inset -0.35em -0.35em 10px #bc9a00bb;
+        inset -0.35em -0.35em 10px #bc9a00bb;
 }
 
 .possibleMove:hover {
     box-shadow: inset 0.5em 0.5em 50px #ffffff;
     transition: box-shadow 0.4s ease-in-out;
 }
-.backg
-{
+.inactive:hover{
+    translate: 0 0 ;
+    
+}
+
+.backg {
     background-color: chartreuse;
 }
