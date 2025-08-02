@@ -1,0 +1,12 @@
+<svg viewBox="0 0 512 512" width="512" height="512" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="white" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Lid -->
+  <rect x="79" y="130" width="354" height="17" rx="16" />
+  <!-- Handle -->
+  <rect x="176" y="84" width="160" height="48" rx="24" />
+  <!-- Main body -->
+  <path d="M112 184l16 201c7 91 21 103 128 103s121-12 128-103l16-201" fill="none"/>
+  <!-- Left line -->
+  <line x1="200" y1="240" x2="215" y2="360" />
+  <!-- Right line -->
+  <line x1="312" y1="240" x2="297" y2="360" />
+</svg>
