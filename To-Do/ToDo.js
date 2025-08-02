@@ -4,8 +4,10 @@ tasks.forEach(() => {
     taskCount++;
 });
 
+// to add at least one task on page load
 Add();
 
+//to add a input field to add a new task
 function Add() {
     taskCount++;
     let newTask = document.createElement("li");
@@ -13,7 +15,7 @@ function Add() {
     newTask.innerHTML = `<input type="text" placeholder="New Task is..." autofocus autocorrect="on"><button type="button" class="done" onclick="Done('task${taskCount}')">✅</button><button type="button" class="cancle" onclick="Cancle('task${taskCount}')">❌</button>`;
     document.querySelector("ul").appendChild(newTask);
 }
-
+// to save the task and remove the input field
 function Done(taskClass) {
     let newTask = document.querySelector(`.${taskClass}`);
     let textInput = newTask.querySelector("input").value;
@@ -21,11 +23,13 @@ function Done(taskClass) {
     document.querySelector("ul").appendChild(newTask);
 }
 
+// to remove the input field without saving    
 function Cancle(taskClass) {
     taskCount--;
     document.querySelector(`.${taskClass}`).remove();
 }
 
+// to delete the task
 function Delete(taskClass) {
     taskCount--;
     document.querySelector(`.${taskClass}`).remove();
