@@ -12,7 +12,7 @@ function Add() {
     taskCount++;
     let newTask = document.createElement("li");
     newTask.className = `task task${taskCount}`;
-    newTask.innerHTML = `<input type="text" placeholder="New Task is..." autofocus autocorrect="on"><button type="button" class="done" onclick="Done('task${taskCount}')">✅</button><button type="button" class="cancle" onclick="Cancle('task${taskCount}')">❌</button>`;
+    newTask.innerHTML = `<input type="text" placeholder="New Task is..." autofocus autocorrect="on"><button type="button" class="done" onclick="Done('task${taskCount}')"><img src="/To learn/To-Do/correct.svg" alt="" class="sidebuttons" ></button><button type="button" class="cancle" onclick="Cancle('task${taskCount}')"><img src="/To learn/To-Do/cross.svg" alt="" class="sidebuttons" ></button>`;
     document.querySelector("ul").appendChild(newTask);
 }
 // to save the task and remove the input field

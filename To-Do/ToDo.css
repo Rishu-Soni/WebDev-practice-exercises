@@ -106,3 +106,7 @@ input {
     transition: background-color 0.3s ease;
     margin: 0 3px;
 }
+.sidebuttons{
+    height: 18px;
+    width: 22px;
+}
