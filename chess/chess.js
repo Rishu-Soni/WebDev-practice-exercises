@@ -9,8 +9,16 @@ document.querySelectorAll(`.darkp`).forEach(opoSide => {
 });
 
 const posToCoor = (position) => {
-    let row = position.charCodeAt(1) - 96;
-    let col = parseInt(position[2]);
+    let rowChar, colChar;
+    if (position[0] === '.') {
+        rowChar = position[1];
+        colChar = position[2];
+    } else {
+        rowChar = position[0];
+        colChar = position[1];
+    }
+    let row = rowChar.charCodeAt(0) - 96;
+    let col = parseInt(colChar);
     return [row, col];
 }
 const coortopos = ([row, col]) => {
@@ -86,7 +94,6 @@ const bishopMovPattern = ([row, col]) => {
                 dRow++;
                 dCol++;
                 if (dRow > 8 || dCol > 8) continue;
-
                 if (document.querySelector('.' + coortopos([dRow, dCol])).querySelector(`img`) && document.querySelector('.' + coortopos([dRow, dCol])).querySelector(`img`).classList.contains(currentSide())) {
                     return;
                 }
@@ -500,80 +507,90 @@ const kingMovPattern = ([row, col]) => {
     for (let [dRow, dCol] of directions) {
         tempRow = row + dRow;
         tempCol = col + dCol;
-        if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) {
-            continue;
-        }
-        else if (document.querySelector('.' + coortopos([tempRow, tempCol])) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`) && document.querySelector('.' + coortopos([tempRow, tempCol])).querySelector(`img`).classList.contains(kingcolor)) continue;
-        else if (document.querySelector('.' + coortopos([tempRow, tempCol])).classList.contains(`impossibleMove`)) continue;
-        else document.querySelector('.' + coortopos([tempRow, tempCol])).classList.add(`possibleMove`);
+        if (tempRow < 1 || tempRow > 8 || tempCol < 1 || tempCol > 8) continue
+        let cell = document.querySelector('.' + coortopos([tempRow, tempCol]));
+        if (cell.querySelector(`img`) && cell.querySelector(`img`).classList.contains(kingcolor)) continue;
+        else if (cell.classList.contains(`impossibleMove`)) continue;
+        cell.classList.add(`possibleMove`);
     }
 }
 
 const pawnMovPattern = ([row, col]) => {
-
     if (clickfromCellDiv.querySelector(`img`).classList.contains(`darkp`)) {
-        if (document.querySelector('.' + coortopos([row + 1, col - 1])) && document.querySelector('.' + coortopos([row + 1, col - 1])).querySelector(`img`) && document.querySelector('.' + coortopos([row + 1, col - 1])).querySelector(`img`).classList.contains(oppSide())) {
-            document.querySelector('.' + coortopos([row + 1, col - 1])).classList.add(`possibleMove`);
-        }
-        if (document.querySelector('.' + coortopos([row - 1, col - 1])) && document.querySelector('.' + coortopos([row - 1, col - 1])).querySelector(`img`) && document.querySelector('.' + coortopos([row - 1, col - 1])).querySelector(`img`).classList.contains(oppSide())) {
-            document.querySelector('.' + coortopos([row - 1, col - 1])).classList.add(`possibleMove`);
-        }
-        if (col == 7) {
-            if (document.querySelector('.' + coortopos([row, col - 1])).querySelector(`img`)) {
-                return;
-            }
-            if (document.querySelector('.' + coortopos([row, col - 1])).querySelector(`img`)) {
-                document.querySelector('.' + coortopos([row, col - 1])).classList.add(`possibleMove`);
-                return;
-            }
-            else {
-                document.querySelector('.' + coortopos([row, col - 2])).classList.add(`possibleMove`);
-                document.querySelector('.' + coortopos([row, col - 1])).classList.add(`possibleMove`);
+        // Left-down capture (row+1, col-1)
+        if (row + 1 <= 8 && col - 1 >= 1) {
+            const cell = document.querySelector('.' + coortopos([row + 1, col - 1]));
+            if (cell?.querySelector(`img`)?.classList.contains(oppSide())) {
+                cell.classList.add(`possibleMove`);
             }
         }
-        // else if (col == 1) {
-
-        // }
-        else {
-            if (document.querySelector('.' + coortopos([row, col - 1])).querySelector(`img`)) {
-                return;
-            }
-            document.querySelector('.' + coortopos([row, col - 1])).classList.add(`possibleMove`);
-        }
-    }
-
-    else if (clickfromCellDiv.querySelector(`img`).classList.contains(`lightp`)) {
-        if (document.querySelector('.' + coortopos([row + 1, col + 1])) && document.querySelector('.' + coortopos([row + 1, col + 1])).querySelector(`img`) && document.querySelector('.' + coortopos([row + 1, col + 1])).querySelector(`img`).classList.contains(oppSide())) {
-            document.querySelector('.' + coortopos([row + 1, col + 1])).classList.add(`possibleMove`);
-        }
-        if (document.querySelector('.' + coortopos([row - 1, col + 1])) && document.querySelector('.' + coortopos([row - 1, col + 1])).querySelector(`img`) && document.querySelector('.' + coortopos([row - 1, col + 1])).querySelector(`img`).classList.contains(oppSide())) {
-            document.querySelector('.' + coortopos([row - 1, col + 1])).classList.add(`possibleMove`);
-        }
-        if (col == 2) {
-
-            if (document.querySelector('.' + coortopos([row, col + 1])).querySelector(`img`)) {
-                return;
-            }
-            if (document.querySelector('.' + coortopos([row, col + 2])).querySelector(`img`)) {
-                document.querySelector('.' + coortopos([row, col + 1])).classList.add(`possibleMove`);
-                return;
-            }
-            else {
-                document.querySelector('.' + coortopos([row, col + 1])).classList.add(`possibleMove`);
-                document.querySelector('.' + coortopos([row, col + 2])).classList.add(`possibleMove`);
+        // Left-up capture (row-1, col-1)
+        if (row - 1 >= 1 && col - 1 >= 1) {
+            const cell = document.querySelector('.' + coortopos([row - 1, col - 1]));
+            if (cell?.querySelector(`img`)?.classList.contains(oppSide())) {
+                cell.classList.add(`possibleMove`);
             }
         }
-        // else if (col == 8) {
-
-        // }
-        else {
-            if (document.querySelector('.' + coortopos([row, col + 1])).querySelector(`img`)) {
-                return;
+        if (col === 7) {
+            // Forward moves (1 or 2 steps)
+            if (col - 1 >= 1) {
+                const cell1 = document.querySelector('.' + coortopos([row, col - 1]));
+                if (!cell1.querySelector(`img`)) {
+                    cell1.classList.add(`possibleMove`);
+                    if (col - 2 >= 1) {
+                        const cell2 = document.querySelector('.' + coortopos([row, col - 2]));
+                        if (!cell2.querySelector(`img`)) {
+                            cell2.classList.add(`possibleMove`);
+                        }
+                    }
+                }
             }
-            document.querySelector('.' + coortopos([row, col + 1])).classList.add(`possibleMove`);
+        } else if (col - 1 >= 1) {
+            // Regular forward move
+            const cell = document.querySelector('.' + coortopos([row, col - 1]));
+            if (!cell.querySelector(`img`)) {
+                cell.classList.add(`possibleMove`);
+            }
+        }
+    } else if (clickfromCellDiv.querySelector(`img`).classList.contains(`lightp`)) {
+        // Right-up capture (row+1, col+1)
+        if (row + 1 <= 8 && col + 1 <= 8) {
+            const cell = document.querySelector('.' + coortopos([row + 1, col + 1]));
+            if (cell?.querySelector(`img`)?.classList.contains(oppSide())) {
+                cell.classList.add(`possibleMove`);
+            }
+        }
+        // Left-up capture (row-1, col+1)
+        if (row - 1 >= 1 && col + 1 <= 8) {
+            const cell = document.querySelector('.' + coortopos([row - 1, col + 1]));
+            if (cell?.querySelector(`img`)?.classList.contains(oppSide())) {
+                cell.classList.add(`possibleMove`);
+            }
+        }
+        if (col === 2) {
+            // Forward moves (1 or 2 steps)
+            if (col + 1 <= 8) {
+                const cell1 = document.querySelector('.' + coortopos([row, col + 1]));
+                if (!cell1.querySelector(`img`)) {
+                    cell1.classList.add(`possibleMove`);
+                    if (col + 2 <= 8) {
+                        const cell2 = document.querySelector('.' + coortopos([row, col + 2]));
+                        if (!cell2.querySelector(`img`)) {
+                            cell2.classList.add(`possibleMove`);
+                        }
+                    }
+                }
+            }
+        } else if (col + 1 <= 8) {
+            // Regular forward move
+            const cell = document.querySelector('.' + coortopos([row, col + 1]));
+            if (!cell.querySelector(`img`)) {
+                cell.classList.add(`possibleMove`);
+            }
         }
     }
 }
+
 
 const isKingInCheck = (kingpos) => {
     let directionRook = [[1, 0], [0, 1], [-1, 0], [0, -1]];
@@ -683,7 +700,9 @@ const isKingInCheck = (kingpos) => {
             if (cell.querySelector(`img`)) return;
 
         }
+        if (temp > 0) return true;
     });
+    if (temp > 0) return true;
 
     // in the direction of the bishop
     directionBishop.forEach(([dRow, dCol]) => {
@@ -723,8 +742,10 @@ const isKingInCheck = (kingpos) => {
             }
             if (cell.querySelector(`img`)) return;
         }
+        if (temp > 0) return true;
 
     });
+    if (temp > 0) return true;
 
     // checking if the knight is attacking the king
     directionsKnight.forEach(([dRow, dCol]) => {
@@ -855,4 +876,3 @@ const getClicked = (position) => {
         preClickedCell = clickfromCellDiv;
     }
 }
-
