@@ -20,8 +20,8 @@ main {
     padding: 20px;
     background-color: #ffffff;
     border-radius: 8px;
-    box-shadow: inset 13px 13px 16px rgba(0, 0, 0, 0.1),
-        inset -13px -13px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 13px 13px 10px rgba(0, 0, 0, 0.1),
+        inset -13px -13px 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
