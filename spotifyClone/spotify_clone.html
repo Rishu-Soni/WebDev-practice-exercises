@@ -9,15 +9,36 @@
 </head>
 
 <body>
-    <nav class="navbar" >
-        <img class="nav_logo" src="spotify.png" alt="spotify_logo">
-        <div class="search_tab" style="height: 40px; padding: 3px 5px; border-radius: 50%; background-color: #292929; list-style: none; "><img class="nav_logo" src="home.png" alt="home_icon"></li>
-        <a href="#"><search class="searchBar"><img class="search_logo" src="search.png" alt="search_logo"></search></a></div>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+    <nav class="navbar">
+        <li class="spotify_logo" style="list-style: none;"><img class="nav_logo" src="spotify.png" alt="spotify_logo"></li>
+        <!-- spotify logo  -->
+        <ul class="midGroup">
+            <li
+                style="height: 40px; margin: 0 7px; padding: 3px 5px; border-radius: 50%; background-color: #292929; list-style: none; ">
+
+                <img class="nav_logo" src="home.png" alt="home_icon">
+            </li> <!-- home icon  -->
+            <li class="searchBar">
+                <img class="search_logo" src="search.png" alt="search_logo">
+                <input oninput="closeapearfunc()" onfocus="searchfocusfunc()" class="searchPlace" placeholder="What do you want to play?">
+                <img class="close" src="close.png" alt="close">
+                <img src="verticalLine.svg" style="height: 28px;">
+                <a><img class="browse" src="browse.svg" alt="browse"></a>
+            </li>
+        </ul>
+        <ul class="rightGroup">
+            <li><button class="exploreButton">Explore Premium</button></li>
+            <li><button
+                    style="display: flex; margin: 0 20px; background-color: #000; border: none; color: rgb(170, 170, 170); font-weight:800; "><img
+                        class="InstallIcon" src="arrow-circle-down.png" alt="">
+                    <p style="margin: 0 0 0 5px; font-size: 12.5px;">Install App</p>
+                </button></li>
+            <li><img class="nav_logo" src="bell.png" alt="bell_icon"
+                    style="height: 18px; margin: 0 10px; filter: invert(60%);"></li>
+            <li><img src="users-alt.png" style="height: 18px; margin: 0 12px; filter: invert(60%);"></li>
+            <li><img class="nav_logo" src="profilepic.png" alt="profile_pic"
+                    style="filter: invert(0%); border: #1f1f1f 7px solid; margin: 0 7px 0 10px ;"></li>
+        </ul>
     </nav>
     <main class="containerSongPlay">
         <div class="card"></div>

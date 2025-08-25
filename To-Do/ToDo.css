@@ -11,10 +11,13 @@ body {
 
 main {
     display: flex;
+    overflow-y: scroll;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     width: 92%;
+    height: 92vh;
+    ;
+    max-height: 92vh;
     max-width: 700px;
     margin: 50px auto;
     padding: 20px;
@@ -29,6 +32,8 @@ h1 {
     font-size: 40px;
     font-weight: 800;
     margin: 20px 0;
+    text-shadow: 5px 5px 13px rgb(255, 0, 0),
+        -5px -5px 13px rgb(0, 204, 255);
 }
 
 ul {
@@ -59,8 +64,21 @@ input {
     background-color: #73ff00;
     color: white;
     border: none;
+    height: 50px;
     width: 50px;
     font-size: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.buttonRemove {
+    height: 50px;
+    margin: 0 10px;
+    padding: 0 10px;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    font-size: 25px;
     border-radius: 50%;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -106,7 +124,8 @@ input {
     transition: background-color 0.3s ease;
     margin: 0 3px;
 }
-.sidebuttons{
+
+.sidebuttons {
     height: 18px;
     width: 22px;
 }
