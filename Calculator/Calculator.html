@@ -7,39 +7,37 @@
     <title>Calculator- javascript</title>
     <link rel="stylesheet" href="Calculator.css">
 </head>
-<main>
-    <div class="Calculator">
-        <div class="ScreenPad">
-            <textarea id="Screen">NONE</textarea>
-        </div>
-        <div class="Keypad">
-            <div class="FunctionPad">
-                <button onclick="operakey('+')" id="Key_+" class= "FunctionKey">+</button>
-                <button onclick="operakey('-')" id="Key_-" class= "FunctionKey">-</button>
-                <button onclick="operakey('*')" id="Key_*" class= "FunctionKey">x</button>
-                <button onclick="operakey('/')" id="Key_/" class= "FunctionKey">/</button>
-                <button onclick="operakey('%')" id="Key_%" class= "FunctionKey">%</button>
-                <button onclick="execute()" id="Key_%" class= "FunctionKey">=</button>
-            </div>
-            <div class="NumberPad">
-                <button onclick="numkey(1)" id="Key_1" class="NumberKey" >1</button>
-                <button onclick="numkey(2)" id="Key_2" class="NumberKey">2</button>
-                <button onclick="numkey(3)" id="Key_3" class="NumberKey">3</button>
-                <button onclick="numkey(4)" id="Key_4" class="NumberKey">4</button>
-                <button onclick="numkey(5)" id="Key_5" class="NumberKey">5</button>
-                <button onclick="numkey(6)" id="Key_6" class="NumberKey">6</button>
-                <button onclick="numkey(7)" id="Key_7" class="NumberKey">7</button>
-                <button onclick="numkey(8)" id="Key_8" class="NumberKey">8</button>
-                <button onclick="numkey(9)" id="Key_9" class="NumberKey">9</button>
-                <button onclick="numkey(0)" id="Key_0" class="NumberKey">0</button>
-                <button onclick="decikey()" id="Key_." class="NumberKey">•</button>
-            </div>
-        </div>
-    </div>
-</main>
-
 <body>
+    <main>
+        <div class="Calculator">
+            <div class="ScreenPad">
+                <input id="Screen" type="text" readonly title="Calculator Screen" placeholder="Result" />
+            </div>
+            <div class="Keypad">
+                <div class="FunctionPad">
+                    <button onclick="operakey('+')" id="Key_+" class="FunctionKey">+</button>
+                    <button onclick="operakey('-')" id="Key_-" class="FunctionKey">-</button>
+                    <button onclick="operakey('*')" id="Key_*" class="FunctionKey">x</button>
+                    <button onclick="operakey('/')" id="Key_/" class="FunctionKey">/</button>
+                    <button onclick="operakey('%')" id="Key_%" class="FunctionKey">%</button>
+                    <button onclick="execute()" id="Key_=" class="FunctionKey">=</button>
+                </div>
+                <div class="NumberPad">
+                    <button onclick="numkey(1)" id="Key_1" class="NumberKey">1</button>
+                    <button onclick="numkey(2)" id="Key_2" class="NumberKey">2</button>
+                    <button onclick="numkey(3)" id="Key_3" class="NumberKey">3</button>
+                    <button onclick="numkey(4)" id="Key_4" class="NumberKey">4</button>
+                    <button onclick="numkey(5)" id="Key_5" class="NumberKey">5</button>
+                    <button onclick="numkey(6)" id="Key_6" class="NumberKey">6</button>
+                    <button onclick="numkey(7)" id="Key_7" class="NumberKey">7</button>
+                    <button onclick="numkey(8)" id="Key_8" class="NumberKey">8</button>
+                    <button onclick="numkey(9)" id="Key_9" class="NumberKey">9</button>
+                    <button onclick="numkey(0)" id="Key_0" class="NumberKey">0</button>
+                    <button onclick="decikey()" id="Key_dot" class="NumberKey">•</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="Calculator.js"></script>
 </body>
-<script src="Calculator.js"></script>
-
 </html>
