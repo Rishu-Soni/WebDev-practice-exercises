@@ -34,13 +34,11 @@ function modulus(a, b) {
 
 function operakey(oper) {
     operand = oper;
-    if (temp >= 1) {
-        document.getElementById("Screen").style.fontSize = "25px";
-        document.getElementById("Screen").innerText = "Error - Too many operands";
-        return;
+    document.getElementById("Screen").value = operand;
+    if (temp == 0) {
+        i++
     }
     temp++;
-    i++;
 }
 
 function execute() {
@@ -64,7 +62,7 @@ function execute() {
         result = "Error - Invalid operation";
     }
 
-    document.getElementById("Screen").innerText = result;
+    document.getElementById("Screen").value = result;
 
     number = [0, 0];
     temp = 0;
@@ -77,11 +75,11 @@ function execute() {
 function numkey(numberkey) {
     if (number[i] >= 100000000000) {
         document.getElementById("Screen").style.fontSize = "25px";
-        document.getElementById("Screen").innerText = "Error - Too large number";
+        document.getElementById("Screen").value = "Error - Too large number";
         return;
     }
     number[i] = number[i] * 10 + numberkey;
-    document.getElementById("Screen").innerText = number[i];
+    document.getElementById("Screen").value = number[i];
 
 }
 
